@@ -30,12 +30,12 @@ def async_test(func):  # is func a coroutine function or a coroutine?
                       asyncio.iscoroutinefunction(func))
 
 
-async def async_get_one(session, url):  # iscoroutinefunction
+async def async_get_one(session, url):  # is a coroutinefunction
     fmt = "{} async_get_one('{}')"
     print(fmt.format(0, url))
     async with session.get(url) as resp:
         print(1, url, resp.status)
-        return await resp.text()
+        return await resp.text()  # returns a coroutine
         # return resp.text()
 
     '''
@@ -47,8 +47,15 @@ async def async_get_one(session, url):  # iscoroutinefunction
     return coroutine  # iscoroutine
     '''
 
+def get_many(session, urls):
+    fmt = "{} async_get_many('{} urls')"
+    print(fmt.format(0, len(urls)))
+    # return [async_get_one(session, url) for url in urls]
+    coroutines = [async_get_one(session, url) for url in urls]
+    return [loop.run_until_complete(coroutine) for coroutine in coroutines]
 
-async def async_get_many(session, urls):  # iscoroutinefunction
+
+async def async_get_many(session, urls):  # is a coroutinefunction
     fmt = "{} async_get_many('{} urls')"
     print(fmt.format(0, len(urls)))
     # return [async_get_one(session, url) for url in urls]
@@ -60,8 +67,8 @@ async def async_get_many(session, urls):  # iscoroutinefunction
         # pages.append(coroutine)
         print('awaited:  {}'.format(i))
         print(type(pages[-1]))
-    print(fmt.format(1, len(urls)))
-    return pages  # iscoroutine
+    print(fmt.format(1, len(pages)))
+    return pages  # returns a coroutine
     # return ((await async_get_one(url)) for url in urls)  # iscoroutine
 
 
@@ -71,10 +78,11 @@ loop = asyncio.get_event_loop()
 print('\n'.join(('async_get_many', async_test(async_get_many))))
 # calling async_get_many(urls) returns a coroutine
 with aiohttp.ClientSession() as session:
-    a = async_get_many(session, urls)
-    print('\n'.join(('async_get_many(urls)', str(a))))
+    a = get_many(session, urls)
+    # # a = async_get_many(session, urls)
+    # # print('\n'.join(('async_get_many(urls)', str(a))))
     # loop.run_until_complete(a) returns the results of execution
-    a = loop.run_until_complete(a)
+    # # a = loop.run_until_complete(a)
 
 '''
 print('async_get:')
