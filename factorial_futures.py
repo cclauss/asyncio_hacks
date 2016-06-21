@@ -7,7 +7,7 @@ import time
 '''
 Execute a list of tasks and get their results using asyncio.
 
-Using using various methods determine if:
+Using various methods determine if:
 1. Execution is synchronous (serial) or asynchronous
 2. Results are returned as completed or when all task are completed
 3. Results are returned in an ordered list or an unordered list
