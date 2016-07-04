@@ -28,7 +28,7 @@ url = urls[0]
 
 
 def async_test(func):  # is func a coroutine function or a coroutine?
-    '''https://docs.python.org/3/library/asyncio-task.html'''
+    '''See: https://docs.python.org/3/library/asyncio-task.html'''
     fmt = 'iscoroutine: {}\niscoroutinefunction: {}'
     return fmt.format(asyncio.iscoroutine(func),
                       asyncio.iscoroutinefunction(func))
